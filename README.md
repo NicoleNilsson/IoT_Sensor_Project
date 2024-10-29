@@ -3,7 +3,7 @@
 ## 1. **Inledning**
 Denna Proof of Concept (PoC) beskriver en IoT-lösning för att mäta och skicka temperatur och luftfuktighet trådlöst över ett lokalt IP-nätverk. Säker dataöverföring sker med hjälp av MQTT, mTLS och HTTPS.
 
-PoC:n är utformad för att visa hur systemet kommer att fungera i praktiken, med en DHT11-sensor kopplad till en ESP32 som skickar data över Wi-Fi i ett lokalt nätverk. Backend är byggt med Docker Compose som använder en MQTT-server för kommunikation, en klient för kommunikation mellan server och backend, en PostgreSQL-databas används för att spara data, och Grafana för visualisering. Backendklienten som körs under PoC är skriven i Python, ESP32-programmet är skriven i C++ och backends Rest Controller är skriven i Java.
+PoC:n är utformad för att visa hur systemet kommer att fungera i praktiken, med en DHT11-sensor kopplad till en ESP32 som skickar data över Wi-Fi i ett lokalt nätverk. Backend är byggt med Docker Compose som använder en MQTT-server för kommunikation, en klient för kommunikation mellan server och backend, en PostgreSQL-databas används för att spara data, och Grafana för visualisering. Backendklienten som körs under PoC är skriven i Python, ESP32-programmet är skriven i C++ (PlatformIO) och backends Rest Controller är skriven i Java (Spring Boot, Gradle Kotlin).
 
 ## 2. **Systemarkitektur**
 
