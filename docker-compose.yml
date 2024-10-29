@@ -1,0 +1,80 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: MQTT_server
+    ports:
+      - "8883:8883"
+      - "8884:8884"
+    volumes:
+      - ./IoTenv/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./IoTenv/certs/myCA.crt:/mosquitto/config/myCA.crt
+      - ./IoTenv/certs/server.crt:/mosquitto/config/server.crt
+      - ./IoTenv/certs/server.key:/mosquitto/config/server.key
+      - ./IoTenv/certs/server2.crt:/mosquitto/config/server2.crt
+      - ./IoTenv/certs/server2.key:/mosquitto/config/server2.key
+  
+  client:
+    build:
+      context: IoTenv
+    container_name: backend_client
+    environment:
+      FLASK_ENV: development
+      MQTT_BROKER: "192.168.1.128"
+      MQTT_PORT: 8884
+      CA_CERT_PATH: /app/certs/myCA.crt
+      CLIENT_CERT_PATH: /app/certs/backend_client.crt
+      CLIENT_KEY_PATH: /app/certs/backend_client.key
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./IoTenv/certs/myCA.crt:/app/certs/myCA.crt
+      - ./IoTenv/certs/backend_client.crt:/app/certs/backend_client.crt
+      - ./IoTenv/certs/backend_client.key:/app/certs/backend_client.key
+    depends_on:
+      - mosquitto
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - client
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sensordb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  spring_backend:
+    image: java-backend:latest
+    build:
+      context: .
+    container_name: spring_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+volumes:
+  grafana_data:
+  postgres_data:
+
+networks:
+  backend:
