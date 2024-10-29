@@ -1,4 +1,4 @@
-# **Systemspecificering för IoT-baserad batteriövervakning för telemaster**
+# **Systemspecificering för IoT-baserad temperatur- och luftfuktighetsmätning**
 
 ## 1. **Inledning**
 Denna Proof of Concept (PoC) beskriver en IoT-lösning för att mäta och skicka temperatur och luftfuktighet trådlöst över ett lokalt IP-nätverk. Säker dataöverföring sker med hjälp av MQTT, mTLS och HTTPS.
